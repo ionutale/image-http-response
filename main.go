@@ -35,9 +35,10 @@ func listAllFromBucket() {
 	// Creates a Bucket instance.
 	bucket := client.Bucket(bucketName)
 
-	query := &storage.Query{Prefix: "foo"}
+	query := &storage.Query{Prefix: "ori"}
 	it := bucket.Objects(ctx, query)
 
+	count := 0
 	for {
 		obj, err := it.Next()
 		if err == iterator.Done {
@@ -47,13 +48,47 @@ func listAllFromBucket() {
 			fmt.Errorf("listBucket: unable to list bucket %q: %v", bucket, err)
 			return
 		}
+		count++
 		fmt.Println("cur object:", obj)
 	}
+	fmt.Println("total-count", count)
+}
 
+func getImageFromBucket(imageName string) []byte {
+	ctx := context.Background()
+
+	// Creates a client.
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+
+	// Sets the name for the new bucket.
+	bucketName := "dodolandia-layouts-originals"
+
+	// Creates a Bucket instance.
+	bucket := client.Bucket(bucketName)
+
+	// Creates a ObjectHandle instance.
+	object := bucket.Object(imageName)
+
+	// Creates a Reader instance.
+	reader, err := object.NewReader(ctx)
+	if err != nil {
+		log.Fatalf("Failed to create reader: %v", err)
+	}
+
+	// Reads the contents of the object.
+	data, err := ioutil.ReadAll(reader)
+	if err != nil {
+		log.Fatalf("Failed to read data: %v", err)
+	}
+
+	return data
 }
 
 func main() {
-	listAllFromBucket()
+	// listAllFromBucket()
 	handler := http.HandlerFunc(handleRequest)
 	http.Handle("/photo", handler)
 	http.ListenAndServe(":8080", nil)
@@ -69,14 +104,17 @@ type ImageFormat struct {
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	imageName := "test.png"
 	if r.URL.Query().Get("name") != "" {
-		imageName = "big-image.png"
+		// dodolandia-layouts-originals/original/5fc3816ade78a2000b9364c6
+		imageName = "original/" + r.URL.Query().Get("name")
 	}
 
-	fileBytes, err := ioutil.ReadFile(imageName)
-	if err != nil {
-		panic(err)
-	}
+	// fileBytes, err := ioutil.ReadFile(imageName)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
+	fileBytes := getImageFromBucket(imageName)
+	
 	// read query params into struct
 	format := r.URL.Query().Get("fm")
 	width := r.URL.Query().Get("w")
