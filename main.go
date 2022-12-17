@@ -24,7 +24,12 @@ type ImageFormat struct {
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	fileBytes, err := ioutil.ReadFile("test.png")
+	imageName := "test.png"
+	if r.URL.Query().Get("name") != "" {
+		imageName = "big-image.png"
+	}
+
+	fileBytes, err := ioutil.ReadFile(imageName)
 	if err != nil {
 		panic(err)
 	}
