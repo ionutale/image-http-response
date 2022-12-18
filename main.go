@@ -12,16 +12,17 @@ import (
 
 	"github.com/discord/lilliput"
 	"google.golang.org/api/iterator"
+
 	// Imports the Google Cloud Storage client package.
 	"cloud.google.com/go/storage"
 	"golang.org/x/net/context"
 )
 
+var bucketName = "dodolandia-layouts-originals-public"
+
+
 func listAllFromBucket() {
 	ctx := context.Background()
-
-	// Sets your Google Cloud Platform project ID.
-	// projectID := "beta-dodolandia"
 
 	// Creates a client.
 	client, err := storage.NewClient(ctx)
@@ -30,7 +31,6 @@ func listAllFromBucket() {
 	}
 
 	// Sets the name for the new bucket.
-	bucketName := "dodolandia-layouts-originals-public"
 
 	// Creates a Bucket instance.
 	bucket := client.Bucket(bucketName)
@@ -63,9 +63,6 @@ func getImageFromBucket(imageName string) []byte {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 
-	// Sets the name for the new bucket.
-	bucketName := "dodolandia-layouts-originals"
-
 	// Creates a Bucket instance.
 	bucket := client.Bucket(bucketName)
 
@@ -91,6 +88,7 @@ func main() {
 	// listAllFromBucket()
 	handler := http.HandlerFunc(handleRequest)
 	http.Handle("/", http.HandlerFunc(healthCheck))
+	fmt.Println("server is up and running")
 	http.Handle("/photo", handler)
 	http.ListenAndServe(":8080", nil)
 }
