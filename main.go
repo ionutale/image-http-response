@@ -90,6 +90,7 @@ func getImageFromBucket(imageName string) []byte {
 func main() {
 	// listAllFromBucket()
 	handler := http.HandlerFunc(handleRequest)
+	http.Handle("/", http.HandlerFunc(healthCheck))
 	http.Handle("/photo", handler)
 	http.ListenAndServe(":8080", nil)
 }
@@ -99,6 +100,12 @@ type ImageFormat struct {
 	Width  int
 	Height int
 	Quality int
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"alive": true}`))
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
