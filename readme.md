@@ -1,4 +1,4 @@
-fm=jpeg&w=100&h=100&q=90&name=5fc3816ade78a2000b9364c6
+fm=jpeg&w=100&h=100&q=90&name=5fc688fbebef1c000ea2f574
 
 ```
 sudo apt-get install apt-transport-https ca-certificates gnupg

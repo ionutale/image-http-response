@@ -30,7 +30,7 @@ func listAllFromBucket() {
 	}
 
 	// Sets the name for the new bucket.
-	bucketName := "dodolandia-layouts-originals"
+	bucketName := "dodolandia-layouts-originals-public"
 
 	// Creates a Bucket instance.
 	bucket := client.Bucket(bucketName)
