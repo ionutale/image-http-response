@@ -154,7 +154,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func getEncodeOptions (format string, quality int) map[int]int {
-	if format == "jpeg" || format == "jpg" {
+	if format == "jpeg" || format == "jpg" || format == ".jpeg" || format == ".jpg"  {
 		return map[int]int{lilliput.JpegQuality: quality}
 	} else if format == "png" {
 		return map[int]int{lilliput.PngCompression: quality}
