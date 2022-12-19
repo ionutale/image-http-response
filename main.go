@@ -13,15 +13,9 @@ func main() {
 
 	app.Get("/", healthCheck)
 	app.Get("/health", healthCheck)
-	app.Get("/photo", getImage_Handler)
-	app.Get("/photo/:name", handleWithParams)
+	app.Get("/photo/:name", getImage_Handler)
 
 	log.Fatal(app.Listen(":8080"))
-}
-
-func handleWithParams(c *fiber.Ctx) error {
-	fmt.Println("handleWithParams", c.Params("name"))
-	return c.SendString("handleWithParams: " + c.Params("name"))
 }
 
 func healthCheck(c *fiber.Ctx) error {
