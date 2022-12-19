@@ -7,7 +7,7 @@ import (
 )
 
 func getEncodeOptions (format string, quality int) map[int]int {
-	if format == "jpeg" || format == "jpg" || format == ".jpeg" || format == ".jpg"  {
+	if format == "jpeg" || format == "jpg"  {
 		return map[int]int{lilliput.JpegQuality: quality}
 	} else if format == "png" {
 		return map[int]int{lilliput.PngCompression: quality}
@@ -19,6 +19,11 @@ func getEncodeOptions (format string, quality int) map[int]int {
 }
 
 func ProcessImage(image []byte, format string, width int, height int, quality int) ([]byte, error) {
+	// check if the format has a dot and remove the dot from the format
+	if format[0] == '.' {
+		format = format[1:]
+	}
+	
 	decoder, err := lilliput.NewDecoder(image)
 	// this error reflects very basic checks,
 	// mostly just for the magic bytes of the file to match known image formats
@@ -36,7 +41,7 @@ func ProcessImage(image []byte, format string, width int, height int, quality in
 	fmt.Println(format, width, height, quality)
 
 	opts := &lilliput.ImageOptions{
-		FileType:             format,
+		FileType:             "." + format,
 		Width:                width,
 		Height:               height,
 		ResizeMethod:         lilliput.ImageOpsFit,

@@ -13,6 +13,14 @@ import (
 
 var bucketName = "dodolandia-layouts-originals-public"
 
+type Image struct {
+	Name string
+	Format string
+	Width  int
+	Height int
+	Quality int
+}
+
 func listAllFromBucket() {
 	ctx := context.Background()
 

@@ -2,47 +2,46 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"log"
+	"github.com/gofiber/fiber/v2"
 	"strconv"
 )
 
 
 func main() {
-	// listAllFromBucket()
-	handler := http.HandlerFunc(handleRequest)
-	http.Handle("/", http.HandlerFunc(healthCheck))
-	fmt.Println("server is up and running")
-	http.Handle("/photo", handler)
-	http.ListenAndServe(":8080", nil)
+	app := fiber.New()
+
+	app.Get("/", healthCheck)
+	app.Get("/health", healthCheck)
+	app.Get("/photo", getImage_Handler)
+	app.Get("/photo/:name", handleWithParams)
+
+	log.Fatal(app.Listen(":8080"))
 }
 
-type ImageFormat struct {
-	Format string
-	Width  int
-	Height int
-	Quality int
+func handleWithParams(c *fiber.Ctx) error {
+	fmt.Println("handleWithParams", c.Params("name"))
+	return c.SendString("handleWithParams: " + c.Params("name"))
 }
 
-func healthCheck(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"alive": true, "v": "3"}`))
+func healthCheck(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{"alive": true, "v": "3"})
 }
 
-func handleRequest(w http.ResponseWriter, r *http.Request) {
-	imageName := "test.png"
-	if r.URL.Query().Get("name") != "" {
-		// dodolandia-layouts-originals/original/5fc3816ade78a2000b9364c6
-		imageName = "original/" + r.URL.Query().Get("name")
+func getImage_Handler(c *fiber.Ctx) error {
+
+	imageName := ""
+	if c.Params("name") != "" {
+		imageName = "original/" + c.Params("name")
 	}
 
 	fileBytes := getImageFromBucket(imageName)
 	
 	// read query params into struct
-	format := r.URL.Query().Get("fm")
-	width := r.URL.Query().Get("w")
-	height := r.URL.Query().Get("h")
-	quality := r.URL.Query().Get("q")	
+	format := c.Query("fm")
+	width := c.Query("w")
+	height := c.Query("h")
+	quality := c.Query("q")
 
 	// convert query params to int
 	widthInt, err := strconv.Atoi(width)
@@ -66,7 +65,9 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Write(newImage)
+	// w.WriteHeader(http.StatusOK)
+	// w.Header().Set("Content-Type", "application/octet-stream")
+	// w.Write(newImage)
+	c.Set("Content-Type", "application/octet-stream")
+	return c.Send(newImage)
 }
