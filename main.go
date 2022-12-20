@@ -61,6 +61,8 @@ func getImage_Handler(c *fiber.Ctx) error {
 	// w.WriteHeader(http.StatusOK)
 	// w.Header().Set("Content-Type", "application/octet-stream")
 	// w.Write(newImage)
-	c.Set("Content-Type", "application/octet-stream")
+	// c.Set("Content-Type", "application/octet-stream")
+	c.Set("Content-Type", "image/png")
+
 	return c.Send(newImage)
 }
