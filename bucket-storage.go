@@ -11,8 +11,8 @@ import (
 
 )
 
-var bucketName = "dodolandia-layouts-originals-public"
-var prefix = "new-originals/"
+var bucketName = "dodolandia-layouts"
+var prefix = "originals/"
 
 type Image struct {
 	Name string
