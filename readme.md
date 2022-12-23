@@ -8,4 +8,6 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 
 gcloud auth application-default login
 
+GOOGLE_APPLICATION_CREDENTIALS
+
 ```

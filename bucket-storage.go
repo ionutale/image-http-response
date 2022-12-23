@@ -2,17 +2,16 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"io/ioutil"
-		// Imports the Google Cloud Storage client package.
+	"log"
+
+	// Imports the Google Cloud Storage client package.
 	"cloud.google.com/go/storage"
 	"golang.org/x/net/context"
-	"google.golang.org/api/iterator"
-
 )
 
 var bucketName = "dodolandia-layouts"
-var prefix = "originals/"
+var prefix = "original/"
 
 type Image struct {
 	Name string
@@ -20,39 +19,6 @@ type Image struct {
 	Width  int
 	Height int
 	Quality int
-}
-
-func listAllFromBucket() {
-	ctx := context.Background()
-
-	// Creates a client.
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	}
-
-	// Sets the name for the new bucket.
-
-	// Creates a Bucket instance.
-	bucket := client.Bucket(bucketName)
-
-	query := &storage.Query{Prefix: prefix}
-	it := bucket.Objects(ctx, query)
-
-	count := 0
-	for {
-		obj, err := it.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			fmt.Errorf("listBucket: unable to list bucket %q: %v", bucket, err)
-			return
-		}
-		count++
-		fmt.Println("cur object:", obj)
-	}
-	fmt.Println("total-count", count)
 }
 
 func getImageFromBucket(imageName string) []byte {
@@ -69,6 +35,7 @@ func getImageFromBucket(imageName string) []byte {
 
 	// Creates a ObjectHandle instance.
 	object := bucket.Object(prefix + imageName)
+	log.Println("image name", prefix + imageName)
 
 	// Creates a Reader instance.
 	reader, err := object.NewReader(ctx)
