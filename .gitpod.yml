@@ -14,5 +14,6 @@ tasks:
 vscode:
   extensions:
     - GitHub.copilot
+    - golang.go
 
 

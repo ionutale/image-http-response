@@ -12,6 +12,7 @@ import (
 )
 
 var bucketName = "dodolandia-layouts-originals-public"
+var prefix = "new-originals/"
 
 type Image struct {
 	Name string
@@ -35,7 +36,7 @@ func listAllFromBucket() {
 	// Creates a Bucket instance.
 	bucket := client.Bucket(bucketName)
 
-	query := &storage.Query{Prefix: "ori"}
+	query := &storage.Query{Prefix: prefix}
 	it := bucket.Objects(ctx, query)
 
 	count := 0
@@ -67,12 +68,13 @@ func getImageFromBucket(imageName string) []byte {
 	bucket := client.Bucket(bucketName)
 
 	// Creates a ObjectHandle instance.
-	object := bucket.Object(imageName)
+	object := bucket.Object(prefix + imageName)
 
 	// Creates a Reader instance.
 	reader, err := object.NewReader(ctx)
 	if err != nil {
-		log.Fatalf("Failed to create reader: %v", err)
+		log.Println("Failed to create reader: ", imageName, bucketName, err)
+		
 	}
 
 	// Reads the contents of the object.
@@ -82,4 +84,38 @@ func getImageFromBucket(imageName string) []byte {
 	}
 
 	return data
+}
+
+func uploadImageToBucket(imageName string, imageBytes []byte) error {
+	ctx := context.Background()
+
+	// Creates a client.
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+		return err
+	}
+
+	// Creates a Bucket instance.
+	bucket := client.Bucket(bucketName)
+
+	// Creates a ObjectHandle instance.
+	object := bucket.Object(prefix + imageName)
+
+	// Creates a Writer instance.
+	writer := object.NewWriter(ctx)
+
+	// Writes data to the object.
+	if _, err := writer.Write(imageBytes); err != nil {
+		log.Fatalf("Failed to write data: %v", err)
+		return err
+	}
+
+	if err := writer.Close(); err != nil {
+		log.Fatalf("Failed to close writer: %v", err)
+		return err
+	}
+
+	fmt.Printf("File %v uploaded.\n", imageName)
+	return nil
 }

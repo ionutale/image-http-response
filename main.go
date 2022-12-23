@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
+	"io"
 	"log"
-	"github.com/gofiber/fiber/v2"
 	"strconv"
-)
 
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 	app := fiber.New()
@@ -13,6 +15,7 @@ func main() {
 	app.Get("/", healthCheck)
 	app.Get("/health", healthCheck)
 	app.Get("/photo/:name", getImage_Handler)
+	app.Post("/images", uploadImage_Handler)
 
 	log.Fatal(app.Listen(":8080"))
 }
@@ -23,13 +26,10 @@ func healthCheck(c *fiber.Ctx) error {
 
 func getImage_Handler(c *fiber.Ctx) error {
 
-	imageName := ""
-	if c.Params("name") != "" {
-		imageName = "original/" + c.Params("name")
-	}
+	imageName := c.Params("name")
 
 	fileBytes := getImageFromBucket(imageName)
-	
+
 	// read query params into struct
 	format := c.Query("fm")
 	width := c.Query("w")
@@ -65,4 +65,44 @@ func getImage_Handler(c *fiber.Ctx) error {
 	c.Set("Content-Type", "image/png")
 
 	return c.Send(newImage)
+}
+
+func uploadImage_Handler(c *fiber.Ctx) error {
+	// read the file
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// read the file into a byte array
+	fileBytes, err := file.Open()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+	defer fileBytes.Close()
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, fileBytes); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// upload the file to the bucket
+	err = uploadImageToBucket(file.Filename, buf.Bytes())
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{"success": true})
 }
