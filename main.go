@@ -55,7 +55,11 @@ func getImage_Handler(c *fiber.Ctx) error {
 	// process image
 	newImage, err := ProcessImage(fileBytes, format, widthInt, heightInt, qualityInt)
 	if err != nil {
-		panic(err)
+		log.Println("Failed to process image: ", err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
 	}
 
 	// w.WriteHeader(http.StatusOK)

@@ -21,13 +21,13 @@ type Image struct {
 	Quality int
 }
 
-func getImageFromBucket(imageName string) []byte {
+func getImageFromBucket(imageName string) []byte, error {
 	ctx := context.Background()
 
 	// Creates a client.
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		return nil, err
 	}
 
 	// Creates a Bucket instance.
@@ -40,17 +40,16 @@ func getImageFromBucket(imageName string) []byte {
 	// Creates a Reader instance.
 	reader, err := object.NewReader(ctx)
 	if err != nil {
-		log.Println("Failed to create reader: ", imageName, bucketName, err)
-		
+		return nil, err
 	}
 
 	// Reads the contents of the object.
 	data, err := ioutil.ReadAll(reader)
 	if err != nil {
-		log.Fatalf("Failed to read data: %v", err)
+		return nil, err
 	}
 
-	return data
+	return data, nil
 }
 
 func uploadImageToBucket(imageName string, imageBytes []byte) error {
