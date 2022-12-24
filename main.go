@@ -18,7 +18,7 @@ func main() {
 	app.Post("/images", uploadImage_Handler)
 
 	log.Fatal(app.Listen(":8080"))
-	PrintMemUsage("server started")
+	PrintMemUsage("Server started")
 }
 
 func healthCheck(c *fiber.Ctx) error {
@@ -26,7 +26,7 @@ func healthCheck(c *fiber.Ctx) error {
 }
 
 func getImage_Handler(c *fiber.Ctx) error {
-	PrintMemUsage("requested image")
+	PrintMemUsage("Requested image")
 	imageName := c.Params("name")
 
 	fileBytes, err := getImageFromBucket(imageName)

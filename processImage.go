@@ -63,7 +63,7 @@ func ProcessImage(image []byte, format string, width int, height int, quality in
 	// PrintMemUsage()
 	// runtime.GC()
 
-	PrintMemUsage("after image processing")
+	PrintMemUsage("After image processing")
 	return outputImg, err
 }
 
@@ -74,10 +74,10 @@ func PrintMemUsage(location string) {
 	runtime.ReadMemStats(&m)
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
 
-	fmt.Printf(location)
-	fmt.Printf("\tAlloc = %v MiB", bToMb(m.Alloc))
-	fmt.Printf("\tTotalAlloc = %v MiB", bToMb(m.TotalAlloc))
-	fmt.Printf("\tSys = %v MiB", bToMb(m.Sys))
+	fmt.Printf(location, " =>")
+	fmt.Printf("\tAlloc = %v MiB,", bToMb(m.Alloc))
+	fmt.Printf("\tTotalAlloc = %v MiB,", bToMb(m.TotalAlloc))
+	fmt.Printf("\tSys = %v MiB,", bToMb(m.Sys))
 	fmt.Printf("\tNumGC = %v\n", m.NumGC)
 }
 
