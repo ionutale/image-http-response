@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 
 	// Imports the Google Cloud Storage client package.
@@ -14,10 +14,10 @@ var bucketName = "dodolandia-layouts"
 var prefix = "original/"
 
 type Image struct {
-	Name string
-	Format string
-	Width  int
-	Height int
+	Name    string
+	Format  string
+	Width   int
+	Height  int
 	Quality int
 }
 
@@ -35,7 +35,7 @@ func getImageFromBucket(imageName string) ([]byte, error) {
 
 	// Creates a ObjectHandle instance.
 	object := bucket.Object(prefix + imageName)
-	log.Println("image name", prefix + imageName)
+	log.Println("image name", prefix+imageName)
 
 	// Creates a Reader instance.
 	reader, err := object.NewReader(ctx)
@@ -44,7 +44,7 @@ func getImageFromBucket(imageName string) ([]byte, error) {
 	}
 
 	// Reads the contents of the object.
-	data, err := ioutil.ReadAll(reader)
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err
 	}
