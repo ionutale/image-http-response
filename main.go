@@ -28,8 +28,14 @@ func getImage_Handler(c *fiber.Ctx) error {
 
 	imageName := c.Params("name")
 
-	fileBytes := getImageFromBucket(imageName)
-
+	fileBytes, err := getImageFromBucket(imageName)
+	if err != nil {
+		log.Println("Failed to get image from bucket: ", err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
 	// read query params into struct
 	format := c.Query("fm")
 	width := c.Query("w")

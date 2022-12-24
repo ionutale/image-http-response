@@ -21,7 +21,7 @@ type Image struct {
 	Quality int
 }
 
-func getImageFromBucket(imageName string) []byte, error {
+func getImageFromBucket(imageName string) ([]byte, error) {
 	ctx := context.Background()
 
 	// Creates a client.
