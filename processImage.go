@@ -74,7 +74,7 @@ func PrintMemUsage(location string) {
 	runtime.ReadMemStats(&m)
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
 
-	fmt.Printf(location, " =>")
+	fmt.Print(location, " =>")
 	fmt.Printf("\tAlloc = %v MiB,", bToMb(m.Alloc))
 	fmt.Printf("\tTotalAlloc = %v MiB,", bToMb(m.TotalAlloc))
 	fmt.Printf("\tSys = %v MiB,", bToMb(m.Sys))

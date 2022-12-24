@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"log"
+	"runtime"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -75,7 +76,11 @@ func getImage_Handler(c *fiber.Ctx) error {
 	// c.Set("Content-Type", "application/octet-stream")
 	c.Set("Content-Type", "image/png")
 
-	return c.Send(newImage)
+	c.Send(newImage)
+
+	runtime.GC()
+	PrintMemUsage("After gc")
+	return nil
 }
 
 func uploadImage_Handler(c *fiber.Ctx) error {
