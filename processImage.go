@@ -63,17 +63,19 @@ func ProcessImage(image []byte, format string, width int, height int, quality in
 	// PrintMemUsage()
 	// runtime.GC()
 
-	PrintMemUsage()
+	PrintMemUsage("after image processing")
 	return outputImg, err
 }
 
 // PrintMemUsage outputs the current, total and OS memory being used. As well as the number
 // of garage collection cycles completed.
-func PrintMemUsage() {
+func PrintMemUsage(location string) {
 	var m runtime.MemStats
 	runtime.ReadMemStats(&m)
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
-	fmt.Printf("Alloc = %v MiB", bToMb(m.Alloc))
+
+	fmt.Printf(location)
+	fmt.Printf("\tAlloc = %v MiB", bToMb(m.Alloc))
 	fmt.Printf("\tTotalAlloc = %v MiB", bToMb(m.TotalAlloc))
 	fmt.Printf("\tSys = %v MiB", bToMb(m.Sys))
 	fmt.Printf("\tNumGC = %v\n", m.NumGC)
