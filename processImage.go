@@ -8,6 +8,8 @@ import (
 	"github.com/discord/lilliput"
 )
 
+var ops = lilliput.NewImageOps(8192)
+
 func getEncodeOptions(format string, quality int) map[int]int {
 	if format == "jpeg" || format == "jpg" {
 		return map[int]int{lilliput.JpegQuality: quality}
@@ -35,10 +37,17 @@ func ProcessImage(image []byte, format string, width int, height int, quality in
 	}
 	defer decoder.Close()
 
+	header, err := decoder.Header()
+	if err != nil {
+		fmt.Printf("error getting image header, %s\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(len(image), header.Width(), header.Height(), header.Orientation())
 	// get ready to resize image,
 	// using 8192x8192 maximum resize buffer size
-	ops := lilliput.NewImageOps(8192)
-	defer ops.Close()
+	// ops := lilliput.NewImageOps(8192)
+	// defer ops.Close()
 
 	fmt.Println(format, width, height, quality)
 
