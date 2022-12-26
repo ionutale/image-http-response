@@ -21,6 +21,8 @@ github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHG
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
+github.com/daddye/vips v0.0.0-20170307215529-87cfaf94f7a1 h1:RaRfmG1LWGpNsbNSFmcWHtsaAbKcjRvOSCTkDFS5RH8=
+github.com/daddye/vips v0.0.0-20170307215529-87cfaf94f7a1/go.mod h1:UqnfPmY4HfvqOBrGdfGTe7Wog8HFMgaz7laavXMVSss=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/discord/lilliput v0.0.0-20220922234446-1ef1bb44bb7e h1:waSNIW5ermIo264QXREgf+6qtKh0qpoGSOoMqxgPiJM=

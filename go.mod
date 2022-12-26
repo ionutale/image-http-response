@@ -11,6 +11,7 @@ require (
 	cloud.google.com/go/iam v0.8.0 // indirect
 	cloud.google.com/go/storage v1.28.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/daddye/vips v0.0.0-20170307215529-87cfaf94f7a1 // indirect
 	github.com/gofiber/fiber/v2 v2.40.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
