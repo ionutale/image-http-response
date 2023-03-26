@@ -10,7 +10,8 @@
       "request": "launch",
       "mode": "auto",
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "${workspaceFolder}/gcp-key.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "${workspaceFolder}/gcp-key.json",
+        "PKG_CONFIG_PATH": "${workspaceFolder}/libvips-build/lib/x86_64-linux-gnu/pkgconfig"
       },
       "program": "${workspaceFolder}"
     }

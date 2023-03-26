@@ -40,15 +40,18 @@ func getImageFromBucket(imageName string) ([]byte, error) {
 	// Creates a Reader instance.
 	reader, err := object.NewReader(ctx)
 	if err != nil {
+		log.Println("Failed to create reader: ", err)
 		return nil, err
 	}
 
 	// Reads the contents of the object.
 	data, err := io.ReadAll(reader)
 	if err != nil {
+		log.Println("Failed to read data: ", err)
 		return nil, err
 	}
 
+	log.Println("File read: ", imageName)
 	return data, nil
 }
 

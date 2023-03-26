@@ -11,7 +11,9 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		BodyLimit: 100 * 1024 * 1024, // 100MB
+	})
 
 	app.Get("/", healthCheck)
 	app.Get("/health", healthCheck)
@@ -83,9 +85,11 @@ func getImage_Handler(c *fiber.Ctx) error {
 }
 
 func uploadImage_Handler(c *fiber.Ctx) error {
+	log.Println("File size: ", c.Request().Header.ContentLength())
 	// read the file
 	file, err := c.FormFile("file")
 	if err != nil {
+		log.Println("Failed to read file: ", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
@@ -95,6 +99,7 @@ func uploadImage_Handler(c *fiber.Ctx) error {
 	// read the file into a byte array
 	fileBytes, err := file.Open()
 	if err != nil {
+		log.Println("Failed to open file: ", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
@@ -104,15 +109,16 @@ func uploadImage_Handler(c *fiber.Ctx) error {
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, fileBytes); err != nil {
+		log.Println("Failed to copy file: ", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
 		})
 	}
-
 	// upload the file to the bucket
 	err = uploadImageToBucket(file.Filename, buf.Bytes())
 	if err != nil {
+		log.Println("Failed to upload image to bucket: ", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
