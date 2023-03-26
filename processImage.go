@@ -12,7 +12,7 @@ var ops = lilliput.NewImageOps(8192)
 
 func getEncodeOptions(format string, quality int) map[int]int {
 	if format == "jpeg" || format == "jpg" {
-		return map[int]int{lilliput.JpegQuality: quality}
+		return map[int]int{lilliput.JpegQuality: quality, lilliput.JpegProgressive: 1}
 	} else if format == "png" {
 		return map[int]int{lilliput.PngCompression: quality}
 	} else if format == "webp" {

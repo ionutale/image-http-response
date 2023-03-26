@@ -17,7 +17,7 @@ func main() {
 
 	app.Get("/", healthCheck)
 	app.Get("/health", healthCheck)
-	app.Get("/photo/:name", getImage_Handler)
+	app.Get("/images/:name", getImage_Handler)
 	app.Post("/images", uploadImage_Handler)
 
 	log.Fatal(app.Listen(":8080"))
@@ -25,7 +25,7 @@ func main() {
 }
 
 func healthCheck(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"alive": true, "v": "5"})
+	return c.JSON(fiber.Map{"alive": true, "v": "0.0.1"})
 }
 
 func getImage_Handler(c *fiber.Ctx) error {
