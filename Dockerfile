@@ -6,7 +6,6 @@ COPY ./go.sum ./
 RUN go mod download
 
 COPY *.go ./
-COPY test.png ./
 
 RUN go build -o main .
 
