@@ -25,7 +25,7 @@ func main() {
 }
 
 func healthCheck(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"alive": true, "v": "0.0.1"})
+	return c.JSON(fiber.Map{"alive": true, "v": "0.1.0"})
 }
 
 func getImage_Handler(c *fiber.Ctx) error {
