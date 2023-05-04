@@ -11,7 +11,9 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+			BodyLimit: 100 * 1024 * 1024,
+	})
 
 	app.Get("/", healthCheck)
 	app.Get("/health", healthCheck)
