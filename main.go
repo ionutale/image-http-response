@@ -19,7 +19,6 @@ func main() {
 	app.Get("/health", healthCheck)
 	app.Get("/photo/:name", getPhoto_Handler)
 	app.Post("/images", uploadImage_Handler)
-	app.Get("/images/:name", getImages_Handler)
 
 	log.Fatal(app.Listen(":8080"))
 	PrintMemUsage("Server started")
@@ -27,74 +26,6 @@ func main() {
 
 func healthCheck(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"alive": true, "v": "5"})
-}
-
-func getImages_Handler(c *fiber.Ctx) error {
-
-	// read query params into struct
-	format := c.Query("fm")
-	width := c.Query("w")
-	height := c.Query("h")
-	quality := c.Query("q")
-	imageName := c.Params("name")
-
-	if format == "" {
-		format = "jpeg"
-	}
-
-	if width == "" && height == "" {
-		width = "100"
-		height = "100"
-	}
-
-	if quality == "" {
-		quality = "100"
-	}
-
-	// convert query params to int
-	widthInt, err := strconv.Atoi(width)
-	if err != nil {
-		panic(err)
-	}
-
-	heightInt, err := strconv.Atoi(height)
-	if err != nil {
-		panic(err)
-	}
-
-	qualityInt, err := strconv.Atoi(quality)
-	if err != nil {
-		panic(err)
-	}
-
-	// get images from bucket
-	images, err := getImageFromBucket(imageName)
-	if err != nil {
-		log.Println("Failed to get images from bucket: ", err)
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
-	}
-
-	// process images
-	newImage, err := ResizeImage(images, widthInt, heightInt, qualityInt, format)
-	if err != nil {
-		log.Println("Failed to process images: ", err)
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
-		})
-	}
-
-
-	// return image
-	c.Set("Content-Type", "image/png")
-	c.Send(newImage)
-
-	runtime.GC()
-	PrintMemUsage("After gc")
-	return nil
 }
 
 func getPhoto_Handler(c *fiber.Ctx) error {
